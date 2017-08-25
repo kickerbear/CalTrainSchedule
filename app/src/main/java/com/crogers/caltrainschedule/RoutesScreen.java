@@ -110,11 +110,5 @@ public class RoutesScreen extends AppCompatActivity {
         TextView resultsText = (TextView) findViewById(R.id.resultsText);
         resultsText.setText(result);
 
-        TextView arrivalText = (TextView) findViewById(R.id.arriveText);
-        arrivalText.setText(arrival);
-
-        TextView departureText = (TextView) findViewById(R.id.departText);
-        departureText.setText(departure);
-
     }
 }

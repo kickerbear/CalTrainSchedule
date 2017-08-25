@@ -13,45 +13,43 @@
     tools:context="com.crogers.caltrainschedule.RoutesScreen"
     tools:showIn="@layout/activity_routes_screen">
 
-    <Spinner
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/arriveSpinner"
-        android:layout_marginStart="22dp"
-        android:layout_alignTop="@+id/departSpinner"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/resultsText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/departSpinner"
-        android:layout_marginBottom="21dp"
-        android:layout_marginEnd="25dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/departText" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/arriveSpinner"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/arriveText"
+        android:layout_alignTop="@+id/arriveText" />
 
     <TextView
+        android:text="To:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/departText"
-        android:layout_marginTop="17dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/departSpinner"
-        android:layout_marginStart="18dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/departSpinner" />
 
     <TextView
+        android:text="From:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/arriveText"
-        android:layout_alignBaseline="@+id/departText"
-        android:layout_alignBottom="@+id/departText"
-        android:layout_alignStart="@+id/arriveSpinner" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/resultsText"
-        android:layout_below="@+id/departText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp" />
 </RelativeLayout>
