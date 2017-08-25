@@ -9,20 +9,29 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class RoutesScreen extends AppCompatActivity {
     ScheduleDataStore dataStore;
     public RoutesScreen(){
-        dataStore = new ScheduleDataStore();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routes_screen);
-
+        try {
+            InputStream is = getAssets().open("trips.json");
+            dataStore = new ScheduleDataStore(is);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         setUpArrivingSpinner();
         setUpDepartingSpinner();
     }
@@ -50,38 +59,46 @@ public class RoutesScreen extends AppCompatActivity {
     }
 
     private void setUpArrivingSpinner(){
-        final Spinner as = (Spinner) findViewById(R.id.arriveSpinner);
-        as.setAdapter(dataStore.getArrivingAdapter(this));
-        as.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        if(dataStore != null) {
+            final Spinner as = (Spinner) findViewById(R.id.arriveSpinner);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataStore.getCities());
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            as.setAdapter(adapter);
+            as.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int myPosition, long myID) {
-                updateResult();
-            }
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int myPosition, long myID) {
+                    updateResult();
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Dont do nothin
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // Dont do nothin
+                }
 
-        });
+            });
+        }
     }
     private void setUpDepartingSpinner(){
-        final Spinner ds = (Spinner) findViewById(R.id.departSpinner);
-        ds.setAdapter(dataStore.getDepartingAdapter(this));
-        ds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        if(dataStore != null) {
+            final Spinner ds = (Spinner) findViewById(R.id.departSpinner);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dataStore.getCities());
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ds.setAdapter(adapter);
+            ds.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int myPosition, long myID) {
-                updateResult();
-            }
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int myPosition, long myID) {
+                    updateResult();
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Dont do nothin
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // Dont do nothin
+                }
 
-        });
+            });
+        }
     }
 
     private void updateResult(){

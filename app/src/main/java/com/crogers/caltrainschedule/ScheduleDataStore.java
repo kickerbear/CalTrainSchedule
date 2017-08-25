@@ -1,6 +1,7 @@
 package com.crogers.caltrainschedule;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,23 +29,32 @@ import java.util.List;
  */
 
 public class ScheduleDataStore {
-
-    public ScheduleDataStore(){
-        //FileReader in = new FileReader("trips.json");
-        //JsonReader reader = new JsonReader(in);
+    ArrayList<BoardingCity> boardingCities = new ArrayList<>();
+    public ScheduleDataStore(InputStream is){
+        try {
+            JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
+            reader.beginObject();
+            while(reader.hasNext()){
+                //name of boarding city
+                String name = reader.nextName();
+                BoardingCity city = readCity(reader, name);
+                boardingCities.add(city);
+            }
+            reader.endObject();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
     }
 
-    private List<String> getCities(){
-        return new ArrayList<String>(Arrays.asList("San Francisco", "San Mateo"));
+    public List<String> getCities(){
+        ArrayList<String> cityNames = new ArrayList<>();
+        for (BoardingCity city: boardingCities) {
+            cityNames.add(city.name);
+        }
+        return cityNames;
     }
 
-    public ArrayAdapter getArrivingAdapter(Activity delegate){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(delegate, android.R.layout.simple_spinner_item, getCities());
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
-    }
 
     public ArrayAdapter getDepartingAdapter(Activity delegate){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(delegate, android.R.layout.simple_spinner_item, getCities());
@@ -61,4 +71,55 @@ public class ScheduleDataStore {
         return "6:01PM -> 10:11PM\n7:02PM -> 11:00PM";
     }
 
+    private BoardingCity readCity(JsonReader reader, String name) throws IOException{
+        ArrayList<DestinationCity> destinations= new ArrayList<>();
+        try{
+        reader.beginObject();
+        while(reader.hasNext()){
+            //name of destination city
+            String dn = reader.nextName();
+            DestinationCity city = readDestination(reader, dn);
+            destinations.add(city);
+        }
+        reader.endObject();
+        } catch(IOException ex) {}
+        return new BoardingCity(name, destinations);
+    }
+    private DestinationCity readDestination(JsonReader reader, String name) throws IOException{
+        ArrayList<TrainStop>  trains = new ArrayList<>();
+        try{
+        reader.beginArray();
+        while(reader.hasNext()){
+            //name of boarding city
+            TrainStop train  = readTrainStop(reader);
+            trains.add(train);
+        }
+        reader.endArray();
+        } catch(IOException ex) {}
+        return new DestinationCity(trains, name);
+    }
+    private TrainStop readTrainStop(JsonReader reader) throws IOException{
+        ArrayList<TrainStop> trains;
+        reader.beginObject();
+        Integer trainId = 0;
+        String from = "";
+        String to = "";
+        try {
+            while (reader.hasNext()) {
+                //name of boarding city
+                String name = reader.nextName();
+                if (name.contains("TrainId")) {
+                    trainId = reader.nextInt();
+                }
+                if (name.contains("Arrive")) {
+                    from = reader.nextString();
+                }
+                if (name.contains("Depart")) {
+                    to = reader.nextString();
+                }
+            }
+            reader.endObject();
+        } catch(IOException ex) {}
+        return new TrainStop(trainId, from, to);
+    }
 }
