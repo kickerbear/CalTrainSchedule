@@ -50,7 +50,7 @@ public class ScheduleDataStore {
     public List<String> getCities(){
         ArrayList<String> cityNames = new ArrayList<>();
         for (BoardingCity city: boardingCities) {
-            cityNames.add(city.name);
+                cityNames.add(city.name);
         }
         return cityNames;
     }
