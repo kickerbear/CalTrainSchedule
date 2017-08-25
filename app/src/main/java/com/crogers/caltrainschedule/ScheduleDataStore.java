@@ -67,8 +67,19 @@ public class ScheduleDataStore {
         if(arrival == departure){
             return "Cities must differ";
         }
-
-        return "6:01PM -> 10:11PM\n7:02PM -> 11:00PM";
+        String baseString = "";
+        for(BoardingCity city: boardingCities){
+            if(city.name.contains(arrival)){
+                for(DestinationCity dest: city.destinations){
+                    if(dest.name.contains(departure)){
+                        for(TrainStop stop: dest.trainStops){
+                            baseString += "\n" + stop.from + " -> " + stop.to;
+                        }
+                    }
+                }
+            }
+        }
+        return baseString;
     }
 
     private BoardingCity readCity(JsonReader reader, String name) throws IOException{
@@ -112,14 +123,15 @@ public class ScheduleDataStore {
                     trainId = reader.nextInt();
                 }
                 if (name.contains("Arrive")) {
-                    from = reader.nextString();
+                    to = reader.nextString();
                 }
                 if (name.contains("Depart")) {
-                    to = reader.nextString();
+                    from = reader.nextString();
                 }
             }
             reader.endObject();
         } catch(IOException ex) {}
+
         return new TrainStop(trainId, from, to);
     }
 }
