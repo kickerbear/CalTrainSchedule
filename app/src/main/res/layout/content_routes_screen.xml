@@ -29,7 +29,7 @@
         android:layout_alignTop="@+id/arriveText" />
 
     <TextView
-        android:text="To:"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/departText"
@@ -45,7 +45,7 @@
         android:layout_alignTop="@+id/departText" />
 
     <TextView
-        android:text="From:"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/arriveText"
